@@ -48,13 +48,11 @@ PyYAML==6.0.3
 referencing==0.37.0
 reportlab==4.4.4
 requests==2.32.5
-rlPyCairo==0.4.0
 rpds-py==0.28.0
 six==1.17.0
 smmap==5.0.2
 streamlit==1.51.0
 streamlit-aggrid==1.2.0.post1
-svglib==1.6.0
 tenacity==9.1.2
 timedelta==2020.12.3
 tinycss2==1.4.0
@@ -67,5 +65,6 @@ uritools==5.0.0
 urllib3==2.5.0
 watchdog==6.0.0
 webencodings==0.5.1
-xhtml2pdf==0.2.17
+
+
 
