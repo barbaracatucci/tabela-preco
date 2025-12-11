@@ -17,9 +17,10 @@ from datetime import datetime, timedelta
 
 # config inicial da pág
 st.set_page_config(page_title="Consulta Tabelas de Preço", layout="wide")
-st.title("Consulta Tabelas de Preço")
+st.title("Consulta Tabelas de Preço V2")
 
 # obter tabelas de preço
+@st.cache_data
 def obter_tabelas():
     try:
         url = "http://ambartech134415.protheus.cloudtotvs.com.br:1807/rest/api/v1/calccomponentesorc2022/tabelapreco"
@@ -41,6 +42,7 @@ def obter_tabelas():
         return pd.DataFrame(columns=["Código do Produto", "Descrição Produto", "IPI", "NCM", "Descrição Tabela", "Código Tabela", "Preço"])
 df_tabelas_preco = obter_tabelas()
 
+@st.cache_data
 def obter_condicoes_pagamento():
     try:
         url = "http://ambartech134415.protheus.cloudtotvs.com.br:1807/rest/api/v1/calccomponentesorc2022/se4"
@@ -104,13 +106,18 @@ if not df_tabelas_preco.empty:
 
     with st.container():
         st.markdown("### 🔍 Filtros")
-        tabela_escolhida = st.selectbox("Selecione a Tabela de Preço:", df_listagem["Tabela"].tolist())
+        tabela_escolhida = st.selectbox("Selecione a Tabela de Preço:", df_listagem["Tabela"].tolist(), index=None,placeholder="Digite ou selecione uma tabela...")
+
+        df_filtrado = df_tabelas_preco.copy()
 
         # Extrair apenas o código da tabela selecionada
-        cod_tabela_selecionado = tabela_escolhida.split(" - ")[0]
+        #cod_tabela_selecionado = tabela_escolhida.split(" - ")[0]
+        if tabela_escolhida:
+            cod_tabela_selecionado = tabela_escolhida.split(" - ")[0]
+            df_filtrado = df_filtrado[df_filtrado["Código Tabela"].astype(str) == cod_tabela_selecionado]
 
         # Filtrar os produtos da tabela selecionada
-        df_filtrado = df_tabelas_preco[df_tabelas_preco["Código Tabela"].astype(str) == cod_tabela_selecionado]
+        #df_filtrado = df_tabelas_preco[df_tabelas_preco["Código Tabela"].astype(str) == cod_tabela_selecionado]
 
         #REMOVE AS COLUNAS QUE NÃO DEVEM APARECER NA TABELA FINAL
         df_filtrado = df_filtrado.drop(columns=["Código Tabela", "Descrição Tabela"])
