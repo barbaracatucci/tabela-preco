@@ -18,6 +18,10 @@ from datetime import datetime, timedelta
 # state para armazenar data da última atualização
 if "ultima_atualizacao" not in st.session_state:
     st.session_state.ultima_atualizacao = None
+if "carregou_uma_vez" not in st.session_state:
+    st.session_state.carregou_uma_vez = True
+    st.cache_data.clear()
+    st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 
 # botão de atualizar (limpa cache e recarrega)
@@ -29,9 +33,6 @@ def atualizar_dados():
 # config inicial da pág
 st.set_page_config(page_title="Consulta Tabelas de Preço", layout="wide")
 st.title("Consulta Tabelas de Preço")
-st.cache_data.clear()
-st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
 
 cols = st.columns([6, 2])
 
@@ -194,6 +195,7 @@ if not df_tabelas_preco.empty:
 
 else:
     st.warning("Nenhuma tabela encontrada na API.")
+
 
 
 
