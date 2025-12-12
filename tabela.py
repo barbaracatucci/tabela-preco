@@ -19,7 +19,10 @@ def atualizar_dados():
     st.cache_data.clear()
     st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     st.rerun()
-atualizar_dados()
+x=0
+if x=0:
+    atualizar_dados()
+    x=1
 
 # state para armazenar data da última atualização
 if "ultima_atualizacao" not in st.session_state:
@@ -197,5 +200,6 @@ if not df_tabelas_preco.empty:
 
 else:
     st.warning("Nenhuma tabela encontrada na API.")
+
 
 
