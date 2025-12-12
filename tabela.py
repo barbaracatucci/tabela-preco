@@ -15,6 +15,11 @@ import pyodbc
 import re
 from datetime import datetime, timedelta
 
+def atualizar_dados():
+    st.cache_data.clear()
+    st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    st.rerun()
+
 # state para armazenar data da última atualização
 if "ultima_atualizacao" not in st.session_state:
     st.session_state.ultima_atualizacao = None
@@ -191,3 +196,4 @@ if not df_tabelas_preco.empty:
 
 else:
     st.warning("Nenhuma tabela encontrada na API.")
+
