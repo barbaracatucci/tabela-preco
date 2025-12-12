@@ -15,9 +15,41 @@ import pyodbc
 import re
 from datetime import datetime, timedelta
 
+# state para armazenar data da última atualização
+if "ultima_atualizacao" not in st.session_state:
+    st.session_state.ultima_atualizacao = None
+
+
+# botão de atualizar (limpa cache e recarrega)
+def atualizar_dados():
+    st.cache_data.clear()
+    st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    st.rerun()
+
 # config inicial da pág
 st.set_page_config(page_title="Consulta Tabelas de Preço", layout="wide")
-st.title("Consulta Tabelas de Preço V2")
+st.title("Consulta Tabelas de Preço")
+
+cols = st.columns([6, 2])
+
+with cols[1]:
+    if st.button("🔄 Atualizar dados"):
+        atualizar_dados()
+
+# Mostra a data da última atualização
+if st.session_state.ultima_atualizacao:
+    cols[1].markdown(
+        f"<p style='font-size:12px; color:gray; text-align:right;'>"
+        f"Última atualização:<br><strong>{st.session_state.ultima_atualizacao}</strong></p>",
+        unsafe_allow_html=True
+    )
+else:
+    cols[1].markdown(
+        "<p style='font-size:12px; color:gray; text-align:right;'>"
+        "Dados ainda não foram atualizados manualmente</p>",
+        unsafe_allow_html=True
+    )
+
 
 # obter tabelas de preço
 @st.cache_data
@@ -39,6 +71,7 @@ def obter_tabelas():
         return df_tab
     except RequestException as e:
         st.error(f"Erro ao obter dados da API: {e}")
+        #st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         return pd.DataFrame(columns=["Código do Produto", "Descrição Produto", "IPI", "NCM", "Descrição Tabela", "Código Tabela", "Preço"])
 df_tabelas_preco = obter_tabelas()
 
@@ -57,7 +90,7 @@ def obter_condicoes_pagamento():
 
         # importante: garantir que os tipos batem com o dataframe principal
         df_cond["Condição de Pagamento"] = df_cond["Condição de Pagamento"].astype(str)
-
+        #st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         return df_cond
 
     except RequestException as e:
