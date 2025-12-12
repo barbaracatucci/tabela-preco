@@ -20,7 +20,7 @@ def atualizar_dados():
     st.session_state.ultima_atualizacao = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     st.rerun()
 x=0
-if x=0:
+if x==0:
     atualizar_dados()
     x=1
 
@@ -200,6 +200,7 @@ if not df_tabelas_preco.empty:
 
 else:
     st.warning("Nenhuma tabela encontrada na API.")
+
 
 
 
